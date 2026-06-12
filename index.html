@@ -29,7 +29,77 @@
 
         html { scroll-behavior: smooth; }
         body { background: var(--bg); color: var(--text); overflow-x: hidden; position: relative; }
-        body.modal-open { overflow: hidden; }
+        
+        body.modal-open, body.intro-locked { overflow: hidden; }
+
+        /* ========================================================
+           SÉQUENCE D'INTRO CINÉMATIQUE AUTOMATIQUE PREMIUM
+           ======================================================== */
+        #pro-intro-overlay {
+            position: fixed; inset: 0; background: #000000; z-index: 99999;
+            display: flex; justify-content: center; align-items: center; flex-direction: column;
+            transition: opacity 1.4s cubic-bezier(0.25, 1, 0.5, 1);
+        }
+        
+        #pro-intro-overlay.intro-hidden {
+            opacity: 0; pointer-events: none;
+        }
+
+        .intro-stage { position: absolute; opacity: 0; pointer-events: none; }
+
+        #pro-term-text {
+            font-family: monospace; color: #10b981; font-size: 14px; line-height: 2;
+            width: 80%; max-width: 600px; text-align: left;
+            text-shadow: 0 0 8px rgba(16, 185, 129, 0.4);
+        }
+        
+        .intro-stage.term-active { animation: termAnim 2.8s forwards cubic-bezier(0.25, 1, 0.5, 1); }
+        @keyframes termAnim { 
+            0% { opacity: 0; transform: translateY(10px); } 
+            10% { opacity: 1; transform: translateY(0); } 
+            90% { opacity: 1; filter: blur(0); } 
+            100% { opacity: 0; filter: blur(8px); transform: translateY(-10px); } 
+        }
+
+        /* LOGO ANIMATION ATLAS */
+        .intro-stage.atlas-active { animation: atlasAnim 3.2s forwards cubic-bezier(0.25, 1, 0.5, 1); }
+        .logo-container { display: flex; flex-direction: column; align-items: center; gap: 16px; }
+        
+        /* Design du Logo Iconique en pur CSS */
+        .atlas-svg-logo {
+            width: 64px; height: 64px; stroke: #ffffff; stroke-width: 1.5; fill: none;
+            stroke-dasharray: 200; stroke-dashoffset: 200;
+            animation: drawLogo 2s forwards ease-in-out;
+        }
+        @keyframes drawLogo { to { stroke-dashoffset: 0; } }
+
+        #pro-atlas-text { 
+            font-size: clamp(16px, 2.5vw, 28px); font-weight: 300; letter-spacing: 20px; 
+            text-transform: uppercase; color: #fff; text-align: center; margin-left: 20px;
+        }
+        @keyframes atlasAnim { 
+            0% { opacity: 0; filter: blur(20px); transform: scale(0.92); } 
+            20% { opacity: 1; filter: blur(0); transform: scale(1); } 
+            80% { opacity: 1; filter: blur(0); transform: scale(1.03); } 
+            100% { opacity: 0; filter: blur(20px); transform: scale(1.08); } 
+        }
+
+        /* BRANDING YSYGPT BRAND CORE */
+        .intro-stage.ysy-active { animation: ysyAnim 4.8s forwards cubic-bezier(0.25, 1, 0.5, 1); }
+        #pro-ysy-text { 
+            font-size: clamp(45px, 9vw, 120px); font-weight: 900; letter-spacing: 30px; 
+            text-transform: uppercase; color: #fff; text-align: center; margin-left: 30px;
+            background: linear-gradient(180deg, #ffffff 0%, #7f8899 100%);
+            -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+            filter: drop-shadow(0 0 50px rgba(255,255,255,0.15));
+        }
+        @keyframes ysyAnim { 
+            0% { opacity: 0; filter: blur(30px); transform: scale(0.8); } 
+            15% { opacity: 1; filter: blur(0); transform: scale(1); } 
+            85% { opacity: 1; filter: blur(0); transform: scale(1.05); } 
+            100% { opacity: 0; filter: blur(40px); transform: scale(1.3); } 
+        }
+        /* ======================================================== */
 
         body::before {
             content: ""; position: fixed; inset: 0; width: 100vw; height: 100vh; opacity: 0.02;
@@ -206,8 +276,27 @@
         }
     </style>
 </head>
-<body>
+<body class="intro-locked">
 
+    <div id="pro-intro-overlay">
+        <div class="intro-stage" id="intro-seq-terminal">
+            <div id="pro-term-text"></div>
+        </div>
+        
+        <div class="intro-stage" id="intro-seq-atlas">
+            <div class="logo-container">
+                <svg class="atlas-svg-logo" viewBox="0 0 100 100">
+                    <polygon points="50,15 90,85 10,85" />
+                    <circle cx="50" cy="52" r="12" />
+                </svg>
+                <div id="pro-atlas-text">Atlas Studio</div>
+            </div>
+        </div>
+
+        <div class="intro-stage" id="intro-seq-ysy">
+            <div id="pro-ysy-text">YSYGPT</div>
+        </div>
+    </div>
     <div class="ambient-glow"></div>
 
     <nav>
@@ -257,7 +346,7 @@
                 <textarea id="codeEditor" spellcheck="false" placeholder=""></textarea>
                 <div class="editor-actions">
                     <button class="run-btn" onclick="compileCode()">EXÉCUTER LE SCRIPT →</button>
-                    <button class="quick-ai-btn" onclick="triggerAIAudit()">AMÉLIORER PAR IA</button>
+                    <button class="quick-ai-btn" onclick="triggerAIAudit()">AMÉLIORER PAR IA </button>
                 </div>
             </div>
             <div class="panel">
@@ -311,6 +400,116 @@
     <footer>ATLAS © 2026 — ALL RIGHTS RESERVED</footer>
 
     <script>
+        // =========================================================================
+        // LOGIQUE D'INTRODUCTION ENTIÈREMENT AUTOMATISÉE AVEC AUDIO CONTEXT DISCRET
+        // =========================================================================
+        let audioAllowed = false;
+        let audioCtx = null;
+
+        // Activation discrète de l'audio dès l'interaction physique avec la page (sans clic requis)
+        const unlockAudio = () => {
+            if (!audioCtx) {
+                audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+                audioAllowed = true;
+                window.removeEventListener('mousemove', unlockAudio);
+                window.removeEventListener('scroll', unlockAudio);
+                window.removeEventListener('touchstart', unlockAudio);
+            }
+        };
+        window.addEventListener('mousemove', unlockAudio);
+        window.addEventListener('scroll', unlockAudio);
+        window.addEventListener('touchstart', unlockAudio);
+
+        document.addEventListener("DOMContentLoaded", () => {
+            const introOverlay = document.getElementById("pro-intro-overlay");
+            const seqTerminal = document.getElementById("intro-seq-terminal");
+            const termText = document.getElementById("pro-term-text");
+            const seqAtlas = document.getElementById("intro-seq-atlas");
+            const seqYsy = document.getElementById("intro-seq-ysy");
+
+            const typingLines = [
+                "> SYSTEM CHECK: OPERATIONAL",
+                "> INITIALIZING YSY_CORE LAYER...",
+                "> SYNCING QUANTUM PARADIGMS...",
+                "> CORE MODULES ONLINE."
+            ];
+
+            // Démarrage immédiat et automatique de la séquence
+            setTimeout(() => {
+                playCinematicBootSound();
+                seqTerminal.classList.add("term-active");
+                
+                let lineIndex = 0;
+                let typingInterval = setInterval(() => {
+                    if (lineIndex < typingLines.length) {
+                        termText.innerHTML += typingLines[lineIndex] + "<br>";
+                        lineIndex++;
+                    } else {
+                        clearInterval(typingInterval);
+                    }
+                }, 350);
+            }, 300);
+
+            // Phase 2 : Logo Atlas Animé
+            setTimeout(() => {
+                seqAtlas.classList.add("atlas-active");
+            }, 3000);
+
+            // Phase 3 : Apex Impact Visuel et Sonore YSYGPT
+            setTimeout(() => {
+                seqYsy.classList.add("ysy-active");
+                playDeepImpactSound();
+            }, 6400);
+
+            // Dissolution finale de l'intro
+            setTimeout(() => {
+                introOverlay.classList.add("intro-hidden");
+                setTimeout(() => {
+                    introOverlay.style.display = "none";
+                    document.body.classList.remove("intro-locked");
+                }, 1400);
+            }, 11000); 
+        });
+
+        function playCinematicBootSound() {
+            if(!audioCtx) return;
+            try {
+                // Synthèse d'un sweep spatial
+                const oscSweep = audioCtx.createOscillator();
+                const gainSweep = audioCtx.createGain();
+                oscSweep.type = 'sawtooth';
+                oscSweep.frequency.setValueAtTime(3000, audioCtx.currentTime);
+                oscSweep.frequency.exponentialRampToValueAtTime(80, audioCtx.currentTime + 2);
+                gainSweep.gain.setValueAtTime(0.04, audioCtx.currentTime);
+                gainSweep.gain.exponentialRampToValueAtTime(0.001, audioCtx.currentTime + 2);
+                
+                oscSweep.connect(gainSweep);
+                gainSweep.connect(audioCtx.destination);
+                oscSweep.start();
+                oscSweep.stop(audioCtx.currentTime + 2);
+            } catch(e) {}
+        }
+
+        function playDeepImpactSound() {
+            if(!audioCtx) return;
+            try {
+                // Onde de choc sub-bass cinématique
+                const osc = audioCtx.createOscillator();
+                const gain = audioCtx.createGain();
+                osc.type = 'triangle';
+                osc.frequency.setValueAtTime(90, audioCtx.currentTime);
+                osc.frequency.exponentialRampToValueAtTime(25, audioCtx.currentTime + 2.5);
+                gain.gain.setValueAtTime(0.4, audioCtx.currentTime);
+                gain.gain.exponentialRampToValueAtTime(0.001, audioCtx.currentTime + 2.5);
+                
+                osc.connect(gain);
+                gain.connect(audioCtx.destination);
+                osc.start();
+                osc.stop(audioCtx.currentTime + 2.5);
+            } catch(e) {}
+        }
+        // =========================================================================
+
         const initialProjectCode = `<section id="contact" style="font-family: sans-serif; padding: 20px;">
   <h2>Contactez-nous</h2>
   <form id="contact-form" novalidate>
@@ -357,7 +556,6 @@
 
         let globalUpgradedCode = "";
 
-        // 🛠️ FIX : S'assurer que BEGIN force toujours l'affichage du chatbot
         startBtn.addEventListener("click", () => { 
             chatbotStage.style.display = "flex";
             terminalStage.style.display = "none";
@@ -489,7 +687,6 @@
             }, 1200);
         });
 
-        // 🛠️ FIX : On remet à zéro l'affichage directement après l'injection
         function applyIAFixes() {
             if(globalUpgradedCode) {
                 document.getElementById("codeEditor").value = globalUpgradedCode;
@@ -498,7 +695,6 @@
             formOverlay.classList.remove("active"); 
             body.classList.remove("modal-open");
             
-            // Rebasculer discrètement sur le chat pour la prochaine ouverture
             setTimeout(() => {
                 chatbotStage.style.display = "flex";
                 terminalStage.style.display = "none";
