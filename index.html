@@ -33,7 +33,7 @@
         body.modal-open, body.intro-locked { overflow: hidden; }
 
         /* ========================================================
-           SÉQUENCE D'INTRO CINÉMATIQUE AUTOMATIQUE PREMIUM
+           SÉQUENCE D'INTRO CINÉMATIQUE AUTOMATIQUE PREMIUM (SANS TEXTE TERMINAL)
            ======================================================== */
         #pro-intro-overlay {
             position: fixed; inset: 0; background: #000000; z-index: 99999;
@@ -47,45 +47,31 @@
 
         .intro-stage { position: absolute; opacity: 0; pointer-events: none; }
 
-        #pro-term-text {
-            font-family: monospace; color: #10b981; font-size: 14px; line-height: 2;
-            width: 80%; max-width: 600px; text-align: left;
-            text-shadow: 0 0 8px rgba(16, 185, 129, 0.4);
-        }
-        
-        .intro-stage.term-active { animation: termAnim 2.8s forwards cubic-bezier(0.25, 1, 0.5, 1); }
-        @keyframes termAnim { 
-            0% { opacity: 0; transform: translateY(10px); } 
-            10% { opacity: 1; transform: translateY(0); } 
-            90% { opacity: 1; filter: blur(0); } 
-            100% { opacity: 0; filter: blur(8px); transform: translateY(-10px); } 
-        }
-
-        /* LOGO ANIMATION ATLAS */
-        .intro-stage.atlas-active { animation: atlasAnim 3.2s forwards cubic-bezier(0.25, 1, 0.5, 1); }
-        .logo-container { display: flex; flex-direction: column; align-items: center; gap: 16px; }
+        /* LOGO ANIMATION ATLAS (PHASE 1) */
+        .intro-stage.atlas-active { animation: atlasAnim 3.5s forwards cubic-bezier(0.25, 1, 0.5, 1); }
+        .logo-container { display: flex; flex-direction: column; align-items: center; gap: 20px; }
         
         /* Design du Logo Iconique en pur CSS */
         .atlas-svg-logo {
-            width: 64px; height: 64px; stroke: #ffffff; stroke-width: 1.5; fill: none;
+            width: 72px; height: 72px; stroke: #ffffff; stroke-width: 1.5; fill: none;
             stroke-dasharray: 200; stroke-dashoffset: 200;
-            animation: drawLogo 2s forwards ease-in-out;
+            animation: drawLogo 2.2s forwards ease-in-out;
         }
         @keyframes drawLogo { to { stroke-dashoffset: 0; } }
 
         #pro-atlas-text { 
-            font-size: clamp(16px, 2.5vw, 28px); font-weight: 300; letter-spacing: 20px; 
+            font-size: clamp(18px, 2.5vw, 32px); font-weight: 300; letter-spacing: 20px; 
             text-transform: uppercase; color: #fff; text-align: center; margin-left: 20px;
         }
         @keyframes atlasAnim { 
-            0% { opacity: 0; filter: blur(20px); transform: scale(0.92); } 
+            0% { opacity: 0; filter: blur(15px); transform: scale(0.95); } 
             20% { opacity: 1; filter: blur(0); transform: scale(1); } 
-            80% { opacity: 1; filter: blur(0); transform: scale(1.03); } 
-            100% { opacity: 0; filter: blur(20px); transform: scale(1.08); } 
+            80% { opacity: 1; filter: blur(0); transform: scale(1.02); } 
+            100% { opacity: 0; filter: blur(15px); transform: scale(1.06); } 
         }
 
-        /* BRANDING YSYGPT BRAND CORE */
-        .intro-stage.ysy-active { animation: ysyAnim 4.8s forwards cubic-bezier(0.25, 1, 0.5, 1); }
+        /* BRANDING YSYGPT (PHASE 2) */
+        .intro-stage.ysy-active { animation: ysyAnim 4.2s forwards cubic-bezier(0.25, 1, 0.5, 1); }
         #pro-ysy-text { 
             font-size: clamp(45px, 9vw, 120px); font-weight: 900; letter-spacing: 30px; 
             text-transform: uppercase; color: #fff; text-align: center; margin-left: 30px;
@@ -94,10 +80,10 @@
             filter: drop-shadow(0 0 50px rgba(255,255,255,0.15));
         }
         @keyframes ysyAnim { 
-            0% { opacity: 0; filter: blur(30px); transform: scale(0.8); } 
+            0% { opacity: 0; filter: blur(30px); transform: scale(0.85); } 
             15% { opacity: 1; filter: blur(0); transform: scale(1); } 
-            85% { opacity: 1; filter: blur(0); transform: scale(1.05); } 
-            100% { opacity: 0; filter: blur(40px); transform: scale(1.3); } 
+            85% { opacity: 1; filter: blur(0); transform: scale(1.04); } 
+            100% { opacity: 0; filter: blur(40px); transform: scale(1.2); } 
         }
         /* ======================================================== */
 
@@ -279,9 +265,6 @@
 <body class="intro-locked">
 
     <div id="pro-intro-overlay">
-        <div class="intro-stage" id="intro-seq-terminal">
-            <div id="pro-term-text"></div>
-        </div>
         
         <div class="intro-stage" id="intro-seq-atlas">
             <div class="logo-container">
@@ -374,7 +357,7 @@
     <div class="overlay-form" id="formOverlay">
         <div class="chat-container">
             <div class="chat-header">
-                <h4>ATLAS Intel Core</h4>
+                <h4>YSYGPT Intel Core</h4>
                 <button class="close-btn" id="closeBtn">Fermer ×</button>
             </div>
             
@@ -401,12 +384,12 @@
 
     <script>
         // =========================================================================
-        // LOGIQUE D'INTRODUCTION ENTIÈREMENT AUTOMATISÉE AVEC AUDIO CONTEXT DISCRET
+        // LOGIQUE D'INTRODUCTION ENTIÈREMENT AUTOMATISÉE ET ACCUEILLANTE
         // =========================================================================
         let audioAllowed = false;
         let audioCtx = null;
 
-        // Activation discrète de l'audio dès l'interaction physique avec la page (sans clic requis)
+        // Déblocage audio discret au premier mouvement
         const unlockAudio = () => {
             if (!audioCtx) {
                 audioCtx = new (window.AudioContext || window.webkitAudioContext)();
@@ -422,90 +405,66 @@
 
         document.addEventListener("DOMContentLoaded", () => {
             const introOverlay = document.getElementById("pro-intro-overlay");
-            const seqTerminal = document.getElementById("intro-seq-terminal");
-            const termText = document.getElementById("pro-term-text");
             const seqAtlas = document.getElementById("intro-seq-atlas");
             const seqYsy = document.getElementById("intro-seq-ysy");
 
-            const typingLines = [
-                "> SYSTEM CHECK: OPERATIONAL",
-                "> INITIALIZING YSY_CORE LAYER...",
-                "> SYNCING QUANTUM PARADIGMS...",
-                "> CORE MODULES ONLINE."
-            ];
-
-            // Démarrage immédiat et automatique de la séquence
+            // Étape 1 : Lancement immédiat et fluide du tracé du Logo Atlas
             setTimeout(() => {
                 playCinematicBootSound();
-                seqTerminal.classList.add("term-active");
-                
-                let lineIndex = 0;
-                let typingInterval = setInterval(() => {
-                    if (lineIndex < typingLines.length) {
-                        termText.innerHTML += typingLines[lineIndex] + "<br>";
-                        lineIndex++;
-                    } else {
-                        clearInterval(typingInterval);
-                    }
-                }, 350);
-            }, 300);
-
-            // Phase 2 : Logo Atlas Animé
-            setTimeout(() => {
                 seqAtlas.classList.add("atlas-active");
-            }, 3000);
+            }, 400);
 
-            // Phase 3 : Apex Impact Visuel et Sonore YSYGPT
+            // Étape 2 : Transition vers le texte de branding YSYGPT (un peu plus tôt pour le dynamisme)
             setTimeout(() => {
                 seqYsy.classList.add("ysy-active");
                 playDeepImpactSound();
-            }, 6400);
+            }, 3600);
 
-            // Dissolution finale de l'intro
+            // Étape 3 : Retrait en fondu de l'overlay pour révéler la page d'accueil
             setTimeout(() => {
                 introOverlay.classList.add("intro-hidden");
                 setTimeout(() => {
                     introOverlay.style.display = "none";
                     document.body.classList.remove("intro-locked");
                 }, 1400);
-            }, 11000); 
+            }, 7600); 
         });
 
         function playCinematicBootSound() {
             if(!audioCtx) return;
             try {
-                // Synthèse d'un sweep spatial
+                // Balayage sonore doux et élégant
                 const oscSweep = audioCtx.createOscillator();
                 const gainSweep = audioCtx.createGain();
-                oscSweep.type = 'sawtooth';
-                oscSweep.frequency.setValueAtTime(3000, audioCtx.currentTime);
-                oscSweep.frequency.exponentialRampToValueAtTime(80, audioCtx.currentTime + 2);
-                gainSweep.gain.setValueAtTime(0.04, audioCtx.currentTime);
-                gainSweep.gain.exponentialRampToValueAtTime(0.001, audioCtx.currentTime + 2);
+                oscSweep.type = 'triangle';
+                oscSweep.frequency.setValueAtTime(1500, audioCtx.currentTime);
+                oscSweep.frequency.exponentialRampToValueAtTime(120, audioCtx.currentTime + 1.8);
+                gainSweep.gain.setValueAtTime(0.03, audioCtx.currentTime);
+                gainSweep.gain.exponentialRampToValueAtTime(0.001, audioCtx.currentTime + 1.8);
                 
                 oscSweep.connect(gainSweep);
                 gainSweep.connect(audioCtx.destination);
                 oscSweep.start();
-                oscSweep.stop(audioCtx.currentTime + 2);
+                oscSweep.stop(audioCtx.currentTime + 1.8);
             } catch(e) {}
         }
 
         function playDeepImpactSound() {
             if(!audioCtx) return;
             try {
-                // Onde de choc sub-bass cinématique
+                // Sub-bass cinématique profonde mais chaleureuse
                 const osc = audioCtx.createOscillator();
                 const gain = audioCtx.createGain();
                 osc.type = 'triangle';
-                osc.frequency.setValueAtTime(90, audioCtx.currentTime);
-                osc.frequency.exponentialRampToValueAtTime(25, audioCtx.currentTime + 2.5);
-                gain.gain.setValueAtTime(0.4, audioCtx.currentTime);
-                gain.gain.exponentialRampToValueAtTime(0.001, audioCtx.currentTime + 2.5);
+                osc.frequency.setValueAtTime(80, audioCtx.currentTime);
+                osc.frequency.exponentialRampToValueAtTime(30, audioCtx.currentTime + 2.2);
+                gain.gain.setValueAtTime(0.35, audioCtx.currentTime);
+                gain.gain.exponentialRampToValueAtTime(0.001, audioCtx.currentTime + 2.2);
                 
                 osc.connect(gain);
                 gain.connect(audioCtx.destination);
                 osc.start();
-                osc.stop(audioCtx.currentTime + 2.5);
+                osc.stop(audioCtx.currentTime + 2.2);
             } catch(e) {}
         }
         // =========================================================================
