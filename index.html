@@ -6,266 +6,430 @@
     <title>YSYGPT — Built For Permanence</title>
     
     <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght=300;400;500;700;900&display=swap">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;700;900&family=Space+Grotesk:wght@300;400;500;700&display=swap">
 
     <script async type="module" src="https://interfaces.zapier.com/assets/web-components/zapier-interfaces/zapier-interfaces.esm.js"></script>
 
     <style>
         :root {
-            --bg: #09090b;
-            --surface: #111318;
-            --line: #1d2330;
-            --text: #f7f8fb;
-            --muted: #7f8899;
-            --accent: #ffffff;
+            --bg:      #07080a;
+            --surface: #0d0f14;
+            --lift:    #12151d;
+            --line:    #1a1f2e;
+            --line-hi: #252d3f;
+            --text:    #eef0f6;
+            --muted:   #5a6378;
+            --soft:    #8a94a8;
+            --accent:  #ffffff;
+            --green:   #0fd98a;
+            --green-dim: rgba(15,217,138,.12);
         }
 
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-            font-family: 'Inter', sans-serif;
-        }
-
+        *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
         html { scroll-behavior: smooth; }
-        body { background: var(--bg); color: var(--text); overflow-x: hidden; position: relative; }
-        
+
+        body {
+            background: var(--bg);
+            color: var(--text);
+            font-family: 'Space Grotesk', sans-serif;
+            overflow-x: hidden;
+            position: relative;
+        }
         body.modal-open, body.intro-locked { overflow: hidden; }
 
-        /* ========================================================
-           SÉQUENCE D'INTRO CINÉMATIQUE AUTOMATIQUE PREMIUM (SANS TEXTE TERMINAL)
-           ======================================================== */
+        /* ── INTRO ─────────────────────────────────────── */
         #pro-intro-overlay {
-            position: fixed; inset: 0; background: #000000; z-index: 99999;
+            position: fixed; inset: 0; background: #000; z-index: 99999;
             display: flex; justify-content: center; align-items: center; flex-direction: column;
             transition: opacity 1.4s cubic-bezier(0.25, 1, 0.5, 1);
         }
-        
-        #pro-intro-overlay.intro-hidden {
-            opacity: 0; pointer-events: none;
-        }
-
+        #pro-intro-overlay.intro-hidden { opacity: 0; pointer-events: none; }
         .intro-stage { position: absolute; opacity: 0; pointer-events: none; }
 
-        /* LOGO ANIMATION ATLAS (PHASE 1) */
         .intro-stage.atlas-active { animation: atlasAnim 3.5s forwards cubic-bezier(0.25, 1, 0.5, 1); }
         .logo-container { display: flex; flex-direction: column; align-items: center; gap: 20px; }
-        
-        /* Design du Logo Iconique en pur CSS */
         .atlas-svg-logo {
-            width: 72px; height: 72px; stroke: #ffffff; stroke-width: 1.5; fill: none;
+            width: 72px; height: 72px; stroke: #fff; stroke-width: 1.5; fill: none;
             stroke-dasharray: 200; stroke-dashoffset: 200;
             animation: drawLogo 2.2s forwards ease-in-out;
         }
         @keyframes drawLogo { to { stroke-dashoffset: 0; } }
-
-        #pro-atlas-text { 
-            font-size: clamp(18px, 2.5vw, 32px); font-weight: 300; letter-spacing: 20px; 
+        #pro-atlas-text {
+            font-size: clamp(18px, 2.5vw, 32px); font-weight: 300; letter-spacing: 20px;
             text-transform: uppercase; color: #fff; text-align: center; margin-left: 20px;
         }
-        @keyframes atlasAnim { 
-            0% { opacity: 0; filter: blur(15px); transform: scale(0.95); } 
-            20% { opacity: 1; filter: blur(0); transform: scale(1); } 
-            80% { opacity: 1; filter: blur(0); transform: scale(1.02); } 
-            100% { opacity: 0; filter: blur(15px); transform: scale(1.06); } 
+        @keyframes atlasAnim {
+            0%   { opacity: 0; filter: blur(15px); transform: scale(0.95); }
+            20%  { opacity: 1; filter: blur(0);    transform: scale(1); }
+            80%  { opacity: 1; filter: blur(0);    transform: scale(1.02); }
+            100% { opacity: 0; filter: blur(15px); transform: scale(1.06); }
         }
 
-        /* BRANDING YSYGPT (PHASE 2) */
         .intro-stage.ysy-active { animation: ysyAnim 4.2s forwards cubic-bezier(0.25, 1, 0.5, 1); }
-        #pro-ysy-text { 
-            font-size: clamp(45px, 9vw, 120px); font-weight: 900; letter-spacing: 30px; 
-            text-transform: uppercase; color: #fff; text-align: center; margin-left: 30px;
-            background: linear-gradient(180deg, #ffffff 0%, #7f8899 100%);
+        #pro-ysy-text {
+            font-size: clamp(45px, 9vw, 120px); font-weight: 700; letter-spacing: 28px;
+            text-transform: uppercase; color: #fff; text-align: center; margin-left: 28px;
+            font-family: 'Inter', sans-serif;
+            background: linear-gradient(160deg, #ffffff 0%, #6b7894 100%);
             -webkit-background-clip: text; -webkit-text-fill-color: transparent;
-            filter: drop-shadow(0 0 50px rgba(255,255,255,0.15));
+            filter: drop-shadow(0 0 60px rgba(255,255,255,.12));
         }
-        @keyframes ysyAnim { 
-            0% { opacity: 0; filter: blur(30px); transform: scale(0.85); } 
-            15% { opacity: 1; filter: blur(0); transform: scale(1); } 
-            85% { opacity: 1; filter: blur(0); transform: scale(1.04); } 
-            100% { opacity: 0; filter: blur(40px); transform: scale(1.2); } 
+        @keyframes ysyAnim {
+            0%   { opacity: 0; filter: blur(30px); transform: scale(0.85); }
+            15%  { opacity: 1; filter: blur(0);    transform: scale(1); }
+            85%  { opacity: 1; filter: blur(0);    transform: scale(1.04); }
+            100% { opacity: 0; filter: blur(40px); transform: scale(1.2); }
         }
-        /* ======================================================== */
 
+        /* ── GRAIN + GLOW ───────────────────────────────── */
         body::before {
-            content: ""; position: fixed; inset: 0; width: 100vw; height: 100vh; opacity: 0.02;
-            pointer-events: none; z-index: 999;
-            background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.65' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)'/%3E%3C/svg%3E");
+            content: ""; position: fixed; inset: 0; opacity: 0.025; pointer-events: none; z-index: 999;
+            background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.7' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
         }
-
-        ::-webkit-scrollbar { width: 6px; }
-        ::-webkit-scrollbar-track { background: #09090b; }
-        ::-webkit-scrollbar-thumb { background: #1d2330; border-radius: 999px; }
-        ::-webkit-scrollbar-thumb:hover { background: #7f8899; }
 
         .ambient-glow {
             position: fixed; inset: 0; pointer-events: none; z-index: 1;
-            background: 
-                radial-gradient(circle at 20% 10%, rgba(255,255,255,.03), transparent 35%),
-                radial-gradient(circle at 80% 60%, rgba(255,255,255,.025), transparent 40%);
+            background:
+                radial-gradient(ellipse 60% 50% at 15% 0%,   rgba(15,217,138,.04),  transparent),
+                radial-gradient(ellipse 50% 40% at 85% 70%,  rgba(255,255,255,.025), transparent),
+                radial-gradient(ellipse 80% 60% at 50% 100%, rgba(15,217,138,.025),  transparent);
         }
 
+        /* ── SCROLLBAR ─────────────────────────────────── */
+        ::-webkit-scrollbar { width: 4px; }
+        ::-webkit-scrollbar-track { background: transparent; }
+        ::-webkit-scrollbar-thumb { background: var(--line-hi); border-radius: 999px; }
+        ::-webkit-scrollbar-thumb:hover { background: var(--muted); }
+
+        /* ── NAV ────────────────────────────────────────── */
         nav {
-            position: fixed; top: 24px; left: 50%; transform: translateX(-50%); width: min(1200px, 92%);
-            padding: 14px 24px; display: flex; justify-content: space-between; align-items: center;
-            background: rgba(15, 16, 21, .65); backdrop-filter: blur(18px); -webkit-backdrop-filter: blur(18px);
-            border: 1px solid rgba(255,255,255,.05); border-radius: 999px; z-index: 100;
+            position: fixed; top: 20px; left: 50%; transform: translateX(-50%);
+            width: min(1200px, 92%);
+            padding: 12px 20px 12px 28px;
+            display: flex; justify-content: space-between; align-items: center;
+            background: rgba(10, 11, 16, .72);
+            backdrop-filter: blur(24px); -webkit-backdrop-filter: blur(24px);
+            border: 1px solid var(--line); border-radius: 999px; z-index: 100;
+            box-shadow: 0 4px 40px rgba(0,0,0,.4), inset 0 1px 0 rgba(255,255,255,.04);
         }
+        .logo {
+            font-family: 'Inter', sans-serif;
+            font-weight: 900; letter-spacing: -2px; font-size: 26px; user-select: none;
+        }
+        .links { display: flex; gap: 36px; }
+        .links a {
+            text-decoration: none; color: var(--muted); font-weight: 500; font-size: 14px;
+            letter-spacing: 0.2px;
+            transition: color .3s;
+        }
+        .links a:hover { color: var(--text); }
+        .nav-btn {
+            padding: 10px 22px; border-radius: 999px; border: none;
+            background: var(--text); color: #07080a;
+            cursor: pointer; font-weight: 700; font-size: 13px; letter-spacing: 0.5px;
+            transition: background .2s, transform .15s;
+        }
+        .nav-btn:hover { background: #fff; transform: scale(1.03); }
 
-        .logo { font-weight: 900; letter-spacing: -2px; font-size: 28px; user-select: none; }
-        .links { display: flex; gap: 40px; }
-        .links a { text-decoration: none; color: var(--muted); font-weight: 500; font-size: 15px; transition: color .4s; }
-        .links a:hover { color: white; }
-        .nav-btn { padding: 12px 24px; border-radius: 999px; border: none; background: white; color: black; cursor: pointer; font-weight: 700; font-size: 14px; }
-
-        .hero { min-height: 100vh; display: flex; justify-content: center; align-items: center; text-align: center; padding: 40px 24px; position: relative; z-index: 2; }
+        /* ── HERO ───────────────────────────────────────── */
+        .hero {
+            min-height: 100vh; display: flex; justify-content: center; align-items: center;
+            text-align: center; padding: 40px 24px; position: relative; z-index: 2;
+        }
         .wrap { max-width: 1300px; }
-        h1 { font-size: clamp(60px, 13vw, 200px); line-height: .85; font-weight: 900; letter-spacing: -8px; }
-        .sub { margin-top: 36px; font-size: clamp(18px, 3vw, 26px); color: var(--muted); }
-        .scroll { margin-top: 80px; color: #555; text-transform: uppercase; font-size: 12px; letter-spacing: 2px; animation: float 2s infinite ease-in-out; }
-        @keyframes float { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(10px); } }
 
-        section { padding: 160px 8vw; position: relative; z-index: 2; max-width: 1400px; margin: 0 auto; }
-        .title { font-size: clamp(36px, 6vw, 80px); font-weight: 900; letter-spacing: -3px; margin-bottom: 60px; }
-
-        .grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 24px; }
-        .card {
-            height: 400px; padding: 40px;
-            background: linear-gradient(180deg, rgba(255,255,255,.03), rgba(255,255,255,.01));
-            border: 1px solid var(--line); border-radius: 32px; display: flex; flex-direction: column; justify-content: space-between;
-            transition: transform .5s cubic-bezier(0.25, 1, 0.5, 1), border-color .5s;
+        h1 {
+            font-family: 'Inter', sans-serif;
+            font-size: clamp(58px, 13vw, 196px);
+            line-height: .84; font-weight: 900; letter-spacing: -6px;
+            background: linear-gradient(180deg, #fff 40%, #3a4258 100%);
+            -webkit-background-clip: text; -webkit-text-fill-color: transparent;
         }
-        .card:hover { transform: translateY(-12px); border-color: rgba(255, 255, 255, .15); }
-        .card h3 { font-size: clamp(32px, 4vw, 44px); font-weight: 700; letter-spacing: -1px; }
-        .card p { color: var(--muted); font-size: 18px; line-height: 1.5; }
 
-        .launcher-container { display: flex; gap: 24px; height: 600px; margin-top: 40px; }
+        .sub {
+            margin-top: 40px; font-size: clamp(17px, 2.4vw, 24px);
+            color: var(--soft); font-weight: 400; letter-spacing: 0.1px;
+        }
+        .hero-tagline {
+            margin-top: 14px; font-size: clamp(12px, 1.3vw, 14px);
+            color: var(--muted); font-weight: 400; letter-spacing: 0.3px;
+        }
+
+        /* signature hairline divider */
+        .hero-rule {
+            display: block; width: 40px; height: 1px;
+            background: var(--green); margin: 36px auto 0; opacity: .6;
+        }
+
+        .scroll {
+            margin-top: 60px; color: var(--muted); text-transform: uppercase;
+            font-size: 11px; letter-spacing: 3px;
+            animation: float 2.2s infinite ease-in-out;
+        }
+        @keyframes float { 0%,100% { transform: translateY(0); } 50% { transform: translateY(8px); } }
+
+        /* ── SECTIONS ───────────────────────────────────── */
+        section {
+            padding: 140px 8vw; position: relative; z-index: 2;
+            max-width: 1400px; margin: 0 auto;
+        }
+
+        .section-label {
+            display: inline-block; font-size: 11px; font-weight: 600;
+            letter-spacing: 3px; text-transform: uppercase; color: var(--green);
+            margin-bottom: 20px;
+        }
+
+        .title {
+            font-family: 'Inter', sans-serif;
+            font-size: clamp(34px, 5.5vw, 76px);
+            font-weight: 900; letter-spacing: -3px; margin-bottom: 56px;
+            background: linear-gradient(180deg, #fff 0%, #6b7894 100%);
+            -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+        }
+
+        /* ── CARDS ──────────────────────────────────────── */
+        .grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 20px; }
+
+        .card {
+            padding: 40px 36px 36px;
+            background: linear-gradient(160deg, var(--lift) 0%, var(--surface) 100%);
+            border: 1px solid var(--line); border-radius: 28px;
+            display: flex; flex-direction: column; gap: 30px;
+            position: relative; overflow: hidden;
+            transition: transform .45s cubic-bezier(0.25, 1, 0.5, 1), border-color .45s, box-shadow .45s;
+        }
+        .card::before {
+            content: ""; position: absolute; inset: 0; opacity: 0;
+            background: radial-gradient(circle at 50% 0%, rgba(15,217,138,.07), transparent 65%);
+            transition: opacity .45s;
+        }
+        .card::after {
+            content: attr(data-num); position: absolute; right: 28px; bottom: 18px;
+            font-family: 'Inter', sans-serif; font-size: 110px; font-weight: 900;
+            line-height: 1; color: var(--text); opacity: .025;
+            letter-spacing: -4px; pointer-events: none; transition: opacity .45s;
+        }
+        .card:hover { transform: translateY(-10px); border-color: var(--line-hi); box-shadow: 0 24px 48px rgba(0,0,0,.5); }
+        .card:hover::before { opacity: 1; }
+        .card:hover::after { opacity: .05; }
+
+        .card-top {
+            display: flex; justify-content: space-between; align-items: flex-start;
+        }
+        .card-index {
+            font-size: 11px; font-weight: 600; letter-spacing: 2px;
+            color: var(--green); text-transform: uppercase;
+        }
+        .card-icon {
+            width: 38px; height: 38px; stroke: var(--soft); stroke-width: 1.3; fill: none;
+            transition: stroke .4s, transform .4s;
+        }
+        .card:hover .card-icon { stroke: var(--green); transform: translateY(-2px); }
+
+        .card-body { display: flex; flex-direction: column; gap: 14px; position: relative; z-index: 1; }
+        .card h3 {
+            font-family: 'Inter', sans-serif;
+            font-size: clamp(26px, 3vw, 36px); font-weight: 700; letter-spacing: -1px;
+            color: var(--text);
+        }
+        .card p { color: var(--muted); font-size: 15.5px; line-height: 1.65; max-width: 30ch; }
+
+        /* ── LAUNCHER ───────────────────────────────────── */
+        .launcher-container { display: flex; gap: 20px; height: 600px; margin-top: 40px; }
         @media (max-width: 900px) { .launcher-container { flex-direction: column; height: 900px; } }
-        
+
         .panel {
             flex: 1; display: flex; flex-direction: column;
-            background: var(--surface); border: 1px solid var(--line); border-radius: 24px; overflow: hidden;
+            background: var(--surface); border: 1px solid var(--line);
+            border-radius: 20px; overflow: hidden;
+            box-shadow: 0 8px 32px rgba(0,0,0,.3);
         }
-        
         .panel-header {
-            padding: 16px 24px; border-bottom: 1px solid var(--line); background: #0c0d12;
-            font-size: 14px; font-weight: 700; letter-spacing: 1px; color: var(--muted); text-transform: uppercase;
+            padding: 14px 22px; border-bottom: 1px solid var(--line); background: var(--lift);
+            font-size: 11px; font-weight: 700; letter-spacing: 2px; color: var(--muted);
+            text-transform: uppercase;
             display: flex; justify-content: space-between; align-items: center;
         }
-
         .status-badge {
-            color: #10b981; font-family: monospace; font-size: 11px; font-weight: 700; letter-spacing: 0.5px;
+            color: var(--green); font-family: monospace; font-size: 10px;
+            font-weight: 700; letter-spacing: 0.5px;
         }
-
         #codeEditor {
-            flex-grow: 1; background: transparent; color: #a1a1aa; font-family: monospace; font-size: 15px; 
-            line-height: 1.6; padding: 24px; border: none; resize: none; outline: none; width: 100%;
+            flex-grow: 1; background: transparent; color: #7a8498; font-family: 'Fira Mono', 'Courier New', monospace;
+            font-size: 14px; line-height: 1.7; padding: 22px; border: none; resize: none; outline: none; width: 100%;
         }
-
         .editor-actions { display: flex; width: 100%; border-top: 1px solid var(--line); }
-
         .run-btn {
-            flex: 1; background: white; color: black; border: none; padding: 18px; font-weight: 800; 
-            letter-spacing: 1px; cursor: pointer; transition: background 0.3s;
+            flex: 1; background: var(--text); color: #07080a; border: none; padding: 16px;
+            font-weight: 800; font-size: 12px; letter-spacing: 1.5px; cursor: pointer;
+            transition: background .25s;
         }
-        .run-btn:hover { background: #e4e4e7; }
-
+        .run-btn:hover { background: #fff; }
         .quick-ai-btn {
-            flex: 1; background: #10b981; color: white; border: none; padding: 18px; font-weight: 800;
-            letter-spacing: 1px; cursor: pointer; transition: opacity 0.3s; border-left: 1px solid var(--line);
+            flex: 1; background: var(--green); color: #07080a; border: none; padding: 16px;
+            font-weight: 800; font-size: 12px; letter-spacing: 1.5px; cursor: pointer;
+            transition: opacity .25s; border-left: 1px solid var(--line);
         }
-        .quick-ai-btn:hover { opacity: 0.9; }
+        .quick-ai-btn:hover { opacity: .85; }
+        #outputFrame { width: 100%; height: 100%; border: none; background: #fff; }
 
-        #outputFrame { width: 100%; height: 100%; border: none; background: #ffffff; }
-
-        .metrics { display: flex; justify-content: space-between; gap: 40px; padding: 100px 8vw; }
-        .metric-item h2 { font-size: clamp(48px, 7vw, 90px); font-weight: 900; letter-spacing: -4px; line-height: 1; }
-        .metric-item p { color: var(--muted); font-size: 14px; margin-top: 12px; text-transform: uppercase; letter-spacing: 2px; }
-
-        .statement { font-size: clamp(40px, 8vw, 130px); line-height: .95; font-weight: 900; letter-spacing: -5px; }
-
-        .cta { display: flex; justify-content: center; align-items: center; flex-direction: column; padding-bottom: 180px; text-align: center; }
-        .big { font-size: clamp(50px, 9vw, 150px); font-weight: 900; line-height: .95; letter-spacing: -6px; }
-        
-        .magnet { 
-            margin-top: 60px; padding: 24px 60px; font-size: 18px; font-weight: 700; 
-            border: none; border-radius: 999px; background: white; color: black; 
-            cursor: pointer; outline: none; position: relative; z-index: 10;
-            display: inline-block;
+        /* ── METRICS ────────────────────────────────────── */
+        .metrics {
+            display: flex; justify-content: space-between; gap: 40px;
+            padding: 100px 8vw;
+            border-top: 1px solid var(--line); border-bottom: 1px solid var(--line);
+        }
+        .metric-item { position: relative; }
+        .metric-item::after {
+            content: ""; position: absolute; top: 0; right: -20px;
+            width: 1px; height: 100%; background: var(--line);
+        }
+        .metric-item:last-child::after { display: none; }
+        .metric-item h2 {
+            font-family: 'Inter', sans-serif;
+            font-size: clamp(44px, 6.5vw, 86px); font-weight: 900;
+            letter-spacing: -4px; line-height: 1;
+            background: linear-gradient(180deg, #fff 0%, #4a5570 100%);
+            -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+        }
+        .metric-item p {
+            color: var(--muted); font-size: 11px; margin-top: 14px;
+            text-transform: uppercase; letter-spacing: 2.5px;
         }
 
-        /* Modal Overlay & Containers */
-        .overlay-form {
-            position: fixed; inset: 0; background: rgba(0, 0, 0, 0.9); z-index: 200;
+        /* ── STATEMENT ──────────────────────────────────── */
+        .statement {
+            font-family: 'Inter', sans-serif;
+            font-size: clamp(38px, 7.5vw, 126px);
+            line-height: .92; font-weight: 900; letter-spacing: -5px;
+            background: linear-gradient(180deg, #fff 0%, #3a4258 100%);
+            -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+        }
+
+        /* ── CTA ────────────────────────────────────────── */
+        .cta {
             display: flex; justify-content: center; align-items: center;
-            opacity: 0; pointer-events: none; transition: opacity 0.5s cubic-bezier(0.25, 1, 0.5, 1); padding: 30px;
-            backdrop-filter: blur(10px);
+            flex-direction: column; padding-bottom: 160px; text-align: center;
+        }
+        .big {
+            font-family: 'Inter', sans-serif;
+            font-size: clamp(48px, 8.5vw, 148px); font-weight: 900;
+            line-height: .92; letter-spacing: -6px;
+            background: linear-gradient(180deg, #fff 0%, #3a4258 100%);
+            -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+        }
+        .magnet {
+            margin-top: 56px; padding: 22px 56px; font-size: 16px; font-weight: 700;
+            border: 1px solid rgba(255,255,255,.12); border-radius: 999px;
+            background: rgba(255,255,255,.06); color: var(--text);
+            cursor: pointer; outline: none; position: relative; z-index: 10;
+            display: inline-block; letter-spacing: 0.5px;
+            backdrop-filter: blur(12px);
+            transition: background .3s, border-color .3s, box-shadow .3s;
+        }
+        .magnet:hover {
+            background: rgba(255,255,255,.1); border-color: rgba(255,255,255,.22);
+            box-shadow: 0 0 40px rgba(255,255,255,.06);
+        }
+
+        /* ── MODAL ──────────────────────────────────────── */
+        .overlay-form {
+            position: fixed; inset: 0; background: rgba(0,0,0,.88); z-index: 200;
+            display: flex; justify-content: center; align-items: center;
+            opacity: 0; pointer-events: none;
+            transition: opacity .45s cubic-bezier(0.25, 1, 0.5, 1);
+            padding: 30px; backdrop-filter: blur(12px);
         }
         .overlay-form.active { opacity: 1; pointer-events: all; }
 
         .chat-container {
-            max-width: 850px; width: 100%; height: 85vh; display: flex; flex-direction: column;
-            justify-content: space-between; background: #0c0d12; border: 1px solid var(--line); border-radius: 24px; overflow: hidden; position: relative;
+            max-width: 850px; width: 100%; height: 85vh;
+            display: flex; flex-direction: column; justify-content: space-between;
+            background: var(--surface); border: 1px solid var(--line);
+            border-radius: 20px; overflow: hidden; position: relative;
+            box-shadow: 0 32px 80px rgba(0,0,0,.6);
         }
-
-        .chat-header { padding: 24px; border-bottom: 1px solid var(--line); display: flex; justify-content: space-between; align-items: center; background: #0c0d12; z-index: 10; }
-        .chat-header h4 { font-size: 18px; font-weight: 700; letter-spacing: -0.5px; color: var(--text); }
-        .close-btn { background: none; border: none; color: var(--muted); font-size: 14px; cursor: pointer; text-transform: uppercase; font-weight: 600; }
-        .close-btn:hover { color: white; }
-
-        /* INTÉGRATION CHATBOT ZAPIER */
-        .chatbot-container { 
-            flex-grow: 1; width: 100%; height: calc(100% - 70px); background: #0c0d12; display: flex; flex-direction: column;
+        .chat-header {
+            padding: 22px 28px; border-bottom: 1px solid var(--line);
+            display: flex; justify-content: space-between; align-items: center;
+            background: var(--lift);
         }
-
-        .embed-wrapper { 
-            flex-grow: 1; width: 100%; height: 75%; overflow: hidden;
+        .chat-header h4 { font-size: 16px; font-weight: 700; letter-spacing: -0.3px; color: var(--text); }
+        .close-btn {
+            background: none; border: 1px solid var(--line); color: var(--muted);
+            font-size: 12px; cursor: pointer; text-transform: uppercase;
+            font-weight: 600; padding: 6px 14px; border-radius: 999px;
+            letter-spacing: 1px; transition: color .2s, border-color .2s;
         }
+        .close-btn:hover { color: var(--text); border-color: var(--line-hi); }
 
+        .chatbot-container {
+            flex-grow: 1; width: 100%; height: calc(100% - 70px);
+            background: var(--surface); display: flex; flex-direction: column;
+        }
+        .embed-wrapper { flex-grow: 1; width: 100%; height: 75%; overflow: hidden; }
         zapier-interfaces-chatbot-embed {
-            width: 100%; height: 100%; display: block; background: #ffffff !important;
+            width: 100%; height: 100%; display: block; background: #fff !important;
             filter: invert(1) grayscale(1) contrast(1.15) brightness(0.95);
         }
-
         .action-bar {
-            width: 100%; padding: 20px; background: #09090b; border-top: 1px solid var(--line); display: flex; justify-content: center; align-items: center; z-index: 110;
+            width: 100%; padding: 18px 20px;
+            background: var(--lift); border-top: 1px solid var(--line);
+            display: flex; justify-content: center; align-items: center;
         }
-
         .deploy-action-btn {
-            background: #10b981; color: white; border: none; 
-            padding: 16px 40px; font-size: 13px; font-weight: 900; 
-            letter-spacing: 1px; border-radius: 999px; cursor: pointer;
-            box-shadow: 0 8px 24px rgba(16, 185, 129, 0.2);
-            transition: transform 0.2s, background 0.2s; width: 100%; max-width: 500px; text-align: center;
+            background: var(--green); color: #07080a; border: none;
+            padding: 14px 36px; font-size: 12px; font-weight: 900;
+            letter-spacing: 1.5px; border-radius: 999px; cursor: pointer;
+            box-shadow: 0 6px 24px rgba(15,217,138,.2);
+            transition: transform .2s, box-shadow .2s; width: 100%; max-width: 500px; text-align: center;
         }
-        .deploy-action-btn:hover { transform: scale(1.02); background: #059669; }
+        .deploy-action-btn:hover { transform: scale(1.02); box-shadow: 0 8px 32px rgba(15,217,138,.3); }
 
-        /* Console Terminal */
-        .terminal-stage { flex-grow: 1; width: 100%; height: calc(100% - 70px); background: #09090b; padding: 40px; overflow-y: auto; }
-        .terminal-console { font-family: monospace; font-size: 14px; line-height: 1.8; color: #f7f8fb; white-space: pre-wrap; }
-        .terminal-line { margin-bottom: 4px; }
-        .error-highlight { color: #10b981; font-weight: bold; }
+        /* ── TERMINAL ───────────────────────────────────── */
+        .terminal-stage {
+            flex-grow: 1; width: 100%; height: calc(100% - 70px);
+            background: #06070a; padding: 36px; overflow-y: auto;
+        }
+        .terminal-console {
+            font-family: 'Fira Mono', 'Courier New', monospace;
+            font-size: 13px; line-height: 1.9; color: var(--text); white-space: pre-wrap;
+        }
+        .terminal-line { margin-bottom: 2px; }
+        .error-highlight { color: var(--green); font-weight: bold; }
 
-        .success-box { margin-top: 30px; border: 1px solid rgba(16, 185, 129, 0.2); padding: 30px; border-radius: 16px; background: #0d1f1a; }
-        .success-box ul { margin-top: 12px; margin-left: 20px; color: #a7f3d0; font-size: 14px; }
+        .success-box {
+            margin-top: 28px; border: 1px solid rgba(15,217,138,.18);
+            padding: 28px; border-radius: 14px; background: rgba(15,217,138,.04);
+        }
+        .success-box ul { margin-top: 12px; margin-left: 20px; color: #7af4c4; font-size: 13px; }
         .success-box li { margin-bottom: 8px; }
 
-        footer { padding: 80px 24px; text-align: center; color: #444; font-size: 14px; position: relative; z-index: 2; }
-        
-        @media (max-width: 768px) { 
-            .links { display: none; } 
-            .grid { grid-template-columns: 1fr; } 
-            .metrics { flex-direction: column; text-align: center; } 
-            .overlay-form { padding: 0; } 
-            .chat-container { height: 100dvh; border-radius: 0; border: none; } 
+        /* ── FOOTER ─────────────────────────────────────── */
+        footer {
+            padding: 64px 24px; text-align: center;
+            color: var(--muted); font-size: 12px; letter-spacing: 1.5px;
+            text-transform: uppercase; position: relative; z-index: 2;
+            border-top: 1px solid var(--line);
+        }
+
+        /* ── RESPONSIVE ─────────────────────────────────── */
+        @media (max-width: 768px) {
+            .links { display: none; }
+            .grid { grid-template-columns: 1fr; }
+            .metrics { flex-direction: column; text-align: center; }
+            .metric-item::after { display: none; }
+            .overlay-form { padding: 0; }
+            .chat-container { height: 100dvh; border-radius: 0; border: none; }
             .chatbot-container { height: 100dvh; border-radius: 0; }
+            h1 { letter-spacing: -4px; }
         }
     </style>
 </head>
 <body class="intro-locked">
 
     <div id="pro-intro-overlay">
-        
         <div class="intro-stage" id="intro-seq-atlas">
             <div class="logo-container">
                 <svg class="atlas-svg-logo" viewBox="0 0 100 100">
@@ -275,11 +439,11 @@
                 <div id="pro-atlas-text">Atlas Studio</div>
             </div>
         </div>
-
         <div class="intro-stage" id="intro-seq-ysy">
             <div id="pro-ysy-text">YSYGPT</div>
         </div>
     </div>
+
     <div class="ambient-glow"></div>
 
     <nav>
@@ -289,44 +453,77 @@
             <a href="#launcher">Launcher</a>
             <a href="#vision">Vision</a>
         </div>
-        <button class="nav-btn" onclick="document.getElementById('launcher').scrollIntoView({behavior: 'smooth'})">ENTER</button>
+        <button class="nav-btn" onclick="document.getElementById('launcher').scrollIntoView({behavior:'smooth'})">ENTER</button>
     </nav>
 
     <div class="hero">
         <div class="wrap">
             <h1>BUILT<br>FOR<br>PERMANENCE</h1>
             <div class="sub">Designing companies that survive generations.</div>
+            <div class="hero-tagline">Chat for free with YSYGPT — no account required — directly in your browser.</div>
+            <span class="hero-rule"></span>
             <div class="scroll">↓ explore</div>
         </div>
     </div>
 
     <section id="work">
-        <div class="title">What we build</div>
+        <span class="section-label">What we build</span>
+        <div class="title">Three pillars.</div>
         <div class="grid">
-            <div class="card">
-                <h3>Capital</h3>
-                <p>Structures that scale asset management seamlessly across decades.</p>
+            <div class="card" data-num="01">
+                <div class="card-top">
+                    <div class="card-index">01 / Capital</div>
+                    <svg class="card-icon" viewBox="0 0 24 24">
+                        <ellipse cx="12" cy="6" rx="8" ry="3"/>
+                        <path d="M4 6v6c0 1.7 3.6 3 8 3s8-1.3 8-3V6"/>
+                        <path d="M4 12v6c0 1.7 3.6 3 8 3s8-1.3 8-3v-6"/>
+                    </svg>
+                </div>
+                <div class="card-body">
+                    <h3>Capital</h3>
+                    <p>Structures that scale asset management seamlessly across decades.</p>
+                </div>
             </div>
-            <div class="card">
-                <h3>Design</h3>
-                <p>Uncompromising interfaces remembered long after code trends fade.</p>
+            <div class="card" data-num="02">
+                <div class="card-top">
+                    <div class="card-index">02 / Design</div>
+                    <svg class="card-icon" viewBox="0 0 24 24">
+                        <rect x="3" y="3" width="11" height="11" rx="2"/>
+                        <path d="M9 14l9-9 3 3-9 9H9v-3z"/>
+                    </svg>
+                </div>
+                <div class="card-body">
+                    <h3>Design</h3>
+                    <p>Uncompromising interfaces remembered long after code trends fade.</p>
+                </div>
             </div>
-            <div class="card">
-                <h3>Infrastructure</h3>
-                <p>Robust foundational frameworks engineered to remain unbreakable.</p>
+            <div class="card" data-num="03">
+                <div class="card-top">
+                    <div class="card-index">03 / Infrastructure</div>
+                    <svg class="card-icon" viewBox="0 0 24 24">
+                        <path d="M4 21V10l8-6 8 6v11"/>
+                        <path d="M9 21v-7h6v7"/>
+                        <path d="M4 14h16"/>
+                    </svg>
+                </div>
+                <div class="card-body">
+                    <h3>Infrastructure</h3>
+                    <p>Robust foundational frameworks engineered to remain unbreakable.</p>
+                </div>
             </div>
         </div>
     </section>
 
     <section id="launcher">
-        <div class="title" style="margin-bottom: 20px;">YSYGPT Core Sandbox</div>
+        <span class="section-label">Sandbox</span>
+        <div class="title" style="margin-bottom: 20px;">YSYGPT Core.</div>
         <div class="launcher-container">
             <div class="panel">
                 <div class="panel-header">
                     <span>Console d'Entrée (Code)</span>
                     <span class="status-badge">// YSY_GPT_CORE ACTIVE</span>
                 </div>
-                <textarea id="codeEditor" spellcheck="false" placeholder=""></textarea>
+                <textarea id="codeEditor" spellcheck="false"></textarea>
                 <div class="editor-actions">
                     <button class="run-btn" onclick="compileCode()">EXÉCUTER LE SCRIPT →</button>
                     <button class="quick-ai-btn" onclick="triggerAIAudit()">AMÉLIORER PAR IA</button>
@@ -346,7 +543,7 @@
     </section>
 
     <section id="vision">
-        <div class="statement">WE DON’T<br>LAUNCH<br>PRODUCTS.<br>WE LAUNCH ERAS.</div>
+        <div class="statement">WE DON'T<br>LAUNCH<br>PRODUCTS.<br>WE LAUNCH ERAS.</div>
     </section>
 
     <section class="cta" id="legacy">
@@ -360,7 +557,6 @@
                 <h4>YSYGPT Intel Core</h4>
                 <button class="close-btn" id="closeBtn">Fermer ×</button>
             </div>
-            
             <div class="chatbot-container" id="chatbotStage">
                 <div class="embed-wrapper">
                     <zapier-interfaces-chatbot-embed
@@ -368,299 +564,201 @@
                         is-popup="false"
                     ></zapier-interfaces-chatbot-embed>
                 </div>
-                
                 <div class="action-bar">
                     <button class="deploy-action-btn" id="deployBtn">AUDITER & AMÉLIORER LE PROJET PAR L'IA →</button>
                 </div>
             </div>
-
-            <div class="terminal-stage" id="terminalStage" style="display: none;">
+            <div class="terminal-stage" id="terminalStage" style="display:none;">
                 <div class="terminal-console" id="terminalConsole"></div>
             </div>
         </div>
     </div>
 
-    <footer>ATLAS © 2026 — ALL RIGHTS RESERVED</footer>
+    <footer>ATLAS © 2026 — All Rights Reserved</footer>
 
     <script>
-        // =========================================================================
-        // LOGIQUE D'INTRODUCTION ENTIÈREMENT AUTOMATISÉE ET ACCUEILLANTE
-        // =========================================================================
-        let audioAllowed = false;
+        // ── AUDIO ─────────────────────────────────────────
         let audioCtx = null;
-
-        // Déblocage audio discret au premier mouvement
         const unlockAudio = () => {
             if (!audioCtx) {
                 audioCtx = new (window.AudioContext || window.webkitAudioContext)();
-                audioAllowed = true;
-                window.removeEventListener('mousemove', unlockAudio);
-                window.removeEventListener('scroll', unlockAudio);
-                window.removeEventListener('touchstart', unlockAudio);
+                ['mousemove','scroll','touchstart'].forEach(e => window.removeEventListener(e, unlockAudio));
             }
         };
-        window.addEventListener('mousemove', unlockAudio);
-        window.addEventListener('scroll', unlockAudio);
-        window.addEventListener('touchstart', unlockAudio);
+        ['mousemove','scroll','touchstart'].forEach(e => window.addEventListener(e, unlockAudio));
 
         document.addEventListener("DOMContentLoaded", () => {
             const introOverlay = document.getElementById("pro-intro-overlay");
             const seqAtlas = document.getElementById("intro-seq-atlas");
-            const seqYsy = document.getElementById("intro-seq-ysy");
+            const seqYsy   = document.getElementById("intro-seq-ysy");
 
-            // Étape 1 : Lancement immédiat et fluide du tracé du Logo Atlas
-            setTimeout(() => {
-                playCinematicBootSound();
-                seqAtlas.classList.add("atlas-active");
-            }, 400);
-
-            // Étape 2 : Transition vers le texte de branding YSYGPT (un peu plus tôt pour le dynamisme)
-            setTimeout(() => {
-                seqYsy.classList.add("ysy-active");
-                playDeepImpactSound();
-            }, 3600);
-
-            // Étape 3 : Retrait en fondu de l'overlay pour révéler la page d'accueil
+            setTimeout(() => { playCinematicBootSound(); seqAtlas.classList.add("atlas-active"); }, 400);
+            setTimeout(() => { seqYsy.classList.add("ysy-active"); playDeepImpactSound(); }, 3600);
             setTimeout(() => {
                 introOverlay.classList.add("intro-hidden");
                 setTimeout(() => {
                     introOverlay.style.display = "none";
                     document.body.classList.remove("intro-locked");
                 }, 1400);
-            }, 7600); 
+            }, 7600);
         });
 
         function playCinematicBootSound() {
-            if(!audioCtx) return;
+            if (!audioCtx) return;
             try {
-                // Balayage sonore doux et élégant
-                const oscSweep = audioCtx.createOscillator();
-                const gainSweep = audioCtx.createGain();
-                oscSweep.type = 'triangle';
-                oscSweep.frequency.setValueAtTime(1500, audioCtx.currentTime);
-                oscSweep.frequency.exponentialRampToValueAtTime(120, audioCtx.currentTime + 1.8);
-                gainSweep.gain.setValueAtTime(0.03, audioCtx.currentTime);
-                gainSweep.gain.exponentialRampToValueAtTime(0.001, audioCtx.currentTime + 1.8);
-                
-                oscSweep.connect(gainSweep);
-                gainSweep.connect(audioCtx.destination);
-                oscSweep.start();
-                oscSweep.stop(audioCtx.currentTime + 1.8);
+                const osc = audioCtx.createOscillator(), g = audioCtx.createGain();
+                osc.type = 'triangle';
+                osc.frequency.setValueAtTime(1500, audioCtx.currentTime);
+                osc.frequency.exponentialRampToValueAtTime(120, audioCtx.currentTime + 1.8);
+                g.gain.setValueAtTime(0.03, audioCtx.currentTime);
+                g.gain.exponentialRampToValueAtTime(0.001, audioCtx.currentTime + 1.8);
+                osc.connect(g); g.connect(audioCtx.destination);
+                osc.start(); osc.stop(audioCtx.currentTime + 1.8);
             } catch(e) {}
         }
-
         function playDeepImpactSound() {
-            if(!audioCtx) return;
+            if (!audioCtx) return;
             try {
-                // Sub-bass cinématique profonde mais chaleureuse
-                const osc = audioCtx.createOscillator();
-                const gain = audioCtx.createGain();
+                const osc = audioCtx.createOscillator(), g = audioCtx.createGain();
                 osc.type = 'triangle';
                 osc.frequency.setValueAtTime(80, audioCtx.currentTime);
                 osc.frequency.exponentialRampToValueAtTime(30, audioCtx.currentTime + 2.2);
-                gain.gain.setValueAtTime(0.35, audioCtx.currentTime);
-                gain.gain.exponentialRampToValueAtTime(0.001, audioCtx.currentTime + 2.2);
-                
-                osc.connect(gain);
-                gain.connect(audioCtx.destination);
-                osc.start();
-                osc.stop(audioCtx.currentTime + 2.2);
+                g.gain.setValueAtTime(0.35, audioCtx.currentTime);
+                g.gain.exponentialRampToValueAtTime(0.001, audioCtx.currentTime + 2.2);
+                osc.connect(g); g.connect(audioCtx.destination);
+                osc.start(); osc.stop(audioCtx.currentTime + 2.2);
             } catch(e) {}
         }
-        // =========================================================================
 
+        // ── EDITOR ───────────────────────────────────────
         const initialProjectCode = `<section id="contact" style="font-family: sans-serif; padding: 20px;">
   <h2>Contactez-nous</h2>
   <form id="contact-form" novalidate>
     <label for="name">Nom complet</label>
     <input type="text" id="name" name="name" required minlength="3" placeholder="Votre nom" />
-
     <label for="email">Email</label>
     <input type="email" id="email" name="email" required placeholder="exemple@domaine.com" />
-
     <label for="message">Message</label>
     <textarea id="message" name="message" rows="5" required minlength="10" placeholder="Votre message ici..."></textarea>
   </form>
 </section>`;
-
         document.getElementById("codeEditor").value = initialProjectCode;
 
         function compileCode() {
-            const code = document.getElementById("codeEditor").value;
-            const iframe = document.getElementById("outputFrame");
-            iframe.srcdoc = code;
+            document.getElementById("outputFrame").srcdoc = document.getElementById("codeEditor").value;
         }
         window.onload = compileCode;
 
+        // ── MAGNET BUTTON ─────────────────────────────────
         const startBtn = document.getElementById("startBtn");
         startBtn.addEventListener("mousemove", e => {
             const r = startBtn.getBoundingClientRect();
-            const x = e.clientX - (r.left + r.width / 2);
-            const y = e.clientY - (r.top + r.height / 2);
             startBtn.style.transition = "none";
-            startBtn.style.transform = `translate(${x * 0.3}px, ${y * 0.3}px)`;
+            startBtn.style.transform = `translate(${(e.clientX-(r.left+r.width/2))*.3}px,${(e.clientY-(r.top+r.height/2))*.3}px)`;
         });
         startBtn.addEventListener("mouseleave", () => {
-            startBtn.style.transition = "transform 0.6s cubic-bezier(0.25, 1, 0.5, 1)";
-            startBtn.style.transform = "translate(0px, 0px)";
+            startBtn.style.transition = "transform .6s cubic-bezier(0.25,1,0.5,1)";
+            startBtn.style.transform = "translate(0,0)";
         });
 
-        const formOverlay = document.getElementById("formOverlay");
-        const closeBtn = document.getElementById("closeBtn");
-        const body = document.body;
-        const deployBtn = document.getElementById("deployBtn");
-        const chatbotStage = document.getElementById("chatbotStage");
-        const terminalStage = document.getElementById("terminalStage");
-        const terminalConsole = document.getElementById("terminalConsole");
-
+        // ── MODAL ─────────────────────────────────────────
+        const formOverlay    = document.getElementById("formOverlay");
+        const closeBtn       = document.getElementById("closeBtn");
+        const deployBtn      = document.getElementById("deployBtn");
+        const chatbotStage   = document.getElementById("chatbotStage");
+        const terminalStage  = document.getElementById("terminalStage");
+        const terminalConsole= document.getElementById("terminalConsole");
         let globalUpgradedCode = "";
 
-        startBtn.addEventListener("click", () => { 
-            chatbotStage.style.display = "flex";
-            terminalStage.style.display = "none";
-            formOverlay.classList.add("active"); 
-            body.classList.add("modal-open"); 
-        });
-        
-        function triggerAIAudit() {
-            chatbotStage.style.display = "flex";
-            terminalStage.style.display = "none";
-            formOverlay.classList.add("active"); 
-            body.classList.add("modal-open");
-            deployBtn.click();
-        }
+        const openModal = () => {
+            chatbotStage.style.display = "flex"; terminalStage.style.display = "none";
+            formOverlay.classList.add("active"); document.body.classList.add("modal-open");
+        };
+        startBtn.addEventListener("click", openModal);
+        function triggerAIAudit() { openModal(); deployBtn.click(); }
 
-        closeBtn.addEventListener("click", () => { 
-            formOverlay.classList.remove("active"); 
-            body.classList.remove("modal-open"); 
-            setTimeout(() => {
-                chatbotStage.style.display = "flex";
-                terminalStage.style.display = "none";
-                terminalConsole.innerHTML = "";
-            }, 500);
+        closeBtn.addEventListener("click", () => {
+            formOverlay.classList.remove("active"); document.body.classList.remove("modal-open");
+            setTimeout(() => { chatbotStage.style.display = "flex"; terminalStage.style.display = "none"; terminalConsole.innerHTML = ""; }, 500);
         });
 
-        function logTerminal(text, className = "") {
-            const div = document.createElement("div");
-            div.className = "terminal-line " + className;
-            div.innerHTML = text;
-            terminalConsole.appendChild(div);
+        function logTerminal(text, cls = "") {
+            const d = document.createElement("div");
+            d.className = "terminal-line " + cls; d.innerHTML = text;
+            terminalConsole.appendChild(d);
             terminalStage.scrollTop = terminalStage.scrollHeight;
         }
 
         deployBtn.addEventListener("click", () => {
-            chatbotStage.style.display = "none";
-            terminalStage.style.display = "block";
+            chatbotStage.style.display = "none"; terminalStage.style.display = "block";
             terminalConsole.innerHTML = "";
-
             logTerminal("> [INIT] Initialisation du pont ATLAS Intel Core...");
             logTerminal("> [CONNECT] Liaison secrète établie avec YSY GPT...");
-            
             const currentCode = document.getElementById("codeEditor").value;
-            logTerminal("> [PROMPT_SECRET] Envoi du code utilisateur avec instructions de refonte globale (HTML + CSS + JS)...");
-            
+            logTerminal("> [PROMPT_SECRET] Envoi du code utilisateur avec instructions de refonte globale...");
+            setTimeout(() => logTerminal("> [ANALYSIS] Analyse sémantique HTML5, architecture CSS3 et compilation JavaScript..."), 500);
             setTimeout(() => {
-                logTerminal("> [ANALYSIS] Analyse sémantique HTML5, architecture CSS3 et compilation JavaScript...");
-            }, 500);
-
-            setTimeout(() => {
-                let pourcentage = Math.floor(Math.random() * (99 - 86 + 1)) + 86; 
-                let conseil1 = "Refonte HTML : Balisage sémantique premium optimisé pour le SEO et l'accessibilité.";
-                let conseil2 = "Style CSS3 : Thème noir cinématique, variables centralisées et transitions fluides (0.3s cubic-bezier).";
-                let conseil3 = "Script JavaScript : Validation asynchrone instantanée avec alertes dynamiques intégrées.";
-
-                let upgradedCode = currentCode;
-                if(currentCode.includes('id="contact-form"')) {
-                    upgradedCode = `<section id="contact-advanced" style="font-family: 'Inter', sans-serif; max-width: 550px; margin: 40px auto; color: #f7f8fb;">
+                const pct = Math.floor(Math.random() * 14) + 86;
+                let upgraded = currentCode;
+                if (currentCode.includes('id="contact-form"')) {
+                    upgraded = `<section id="contact-advanced" style="font-family:'Inter',sans-serif;max-width:550px;margin:40px auto;color:#f7f8fb;">
   <style>
-    .atlas-card { background: #111318; border: 1px solid #1d2330; border-radius: 24px; padding: 40px; box-shadow: 0 20px 40px rgba(0,0,0,0.3); }
-    .form-group { display: flex; flex-direction: column; gap: 8px; margin-bottom: 20px; }
-    .form-group label { font-size: 13px; color: #7f8899; font-weight: 600; text-transform: uppercase; letter-spacing: 0.5px; }
-    .form-control { background: #09090b; border: 1px solid #1d2330; color: white; padding: 14px; border-radius: 12px; outline: none; transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1); }
-    .form-control:focus { border-color: #10b981; box-shadow: 0 0 0 3px rgba(16, 185, 129, 0.1); }
-    .submit-btn { background: white; color: black; border: none; padding: 16px; border-radius: 12px; font-weight: 800; cursor: pointer; transition: background 0.3s, transform 0.1s; letter-spacing: 0.5px; width: 100%; }
-    .submit-btn:hover { background: #e4e4e7; }
-    .submit-btn:active { transform: scale(0.98); }
+    .atlas-card{background:#111318;border:1px solid #1d2330;border-radius:24px;padding:40px;box-shadow:0 20px 40px rgba(0,0,0,.3);}
+    .form-group{display:flex;flex-direction:column;gap:8px;margin-bottom:20px;}
+    .form-group label{font-size:13px;color:#7f8899;font-weight:600;text-transform:uppercase;letter-spacing:.5px;}
+    .form-control{background:#09090b;border:1px solid #1d2330;color:#fff;padding:14px;border-radius:12px;outline:none;transition:all .3s cubic-bezier(.4,0,.2,1);}
+    .form-control:focus{border-color:#0fd98a;box-shadow:0 0 0 3px rgba(15,217,138,.1);}
+    .submit-btn{background:#fff;color:#07080a;border:none;padding:16px;border-radius:12px;font-weight:800;cursor:pointer;transition:background .3s,transform .1s;letter-spacing:.5px;width:100%;}
+    .submit-btn:hover{background:#e4e4e7;}
+    .submit-btn:active{transform:scale(.98);}
   </style>
-
   <div class="atlas-card">
-    <h2 style="font-size: 24px; font-weight: 900; margin-bottom: 24px; letter-spacing: -1px; color: #fff;">Formulaire de Contact Premium</h2>
+    <h2 style="font-size:24px;font-weight:900;margin-bottom:24px;letter-spacing:-1px;color:#fff;">Formulaire de Contact Premium</h2>
     <form id="contact-form-premium" novalidate>
-      <div class="form-group">
-        <label for="name">Nom complet</label>
-        <input type="text" id="name" class="form-control" required minlength="3" placeholder="Votre nom complet" />
-      </div>
-      <div class="form-group">
-        <label for="email">Email d'affaires</label>
-        <input type="email" id="email" class="form-control" required placeholder="exemple@domaine.com" />
-      </div>
-      <div class="form-group">
-        <label for="message">Brief du Projet</label>
-        <textarea id="message" class="form-control" rows="5" required minlength="10" placeholder="Décrivez vos besoins ici..." style="resize: none;"></textarea>
-      </div>
+      <div class="form-group"><label>Nom complet</label><input type="text" id="name" class="form-control" required minlength="3" placeholder="Votre nom complet"/></div>
+      <div class="form-group"><label>Email d'affaires</label><input type="email" id="email" class="form-control" required placeholder="exemple@domaine.com"/></div>
+      <div class="form-group"><label>Brief du Projet</label><textarea id="message" class="form-control" rows="5" required minlength="10" placeholder="Décrivez vos besoins ici..." style="resize:none;"></textarea></div>
       <button type="submit" class="submit-btn">TRANSMETTRE LA CHARGE →</button>
     </form>
   </div>
-
   <script>
-    document.getElementById('contact-form-premium').addEventListener('submit', function(e) {
+    document.getElementById('contact-form-premium').addEventListener('submit',function(e){
       e.preventDefault();
-      const name = document.getElementById('name').value.trim();
-      const email = document.getElementById('email').value.trim();
-      const msg = document.getElementById('message').value.trim();
-      if(name.length >= 3 && email.includes('@') && msg.length >= 10) {
-        alert('⚡ [ATLAS CORE] : Données validées avec succès via la couche Javascript !');
-      } else {
-        alert('❌ [ERREUR JS] : Validation échouée. Vérifiez vos entrées.');
-      }
+      const n=document.getElementById('name').value.trim(),em=document.getElementById('email').value.trim(),m=document.getElementById('message').value.trim();
+      if(n.length>=3&&em.includes('@')&&m.length>=10){alert('⚡ [ATLAS CORE] : Données validées avec succès !');}
+      else{alert('❌ [ERREUR JS] : Validation échouée. Vérifiez vos entrées.');}
     });
   <\/script>
 </section>`;
                 } else {
-                    upgradedCode = `\n<div style="font-family: 'Inter', sans-serif; color: #f7f8fb; background: #111318; padding: 30px; border-radius: 16px; border: 1px solid #1d2330;">\n${currentCode}\n</div>`;
+                    upgraded = `<div style="font-family:'Inter',sans-serif;color:#f7f8fb;background:#111318;padding:30px;border-radius:16px;border:1px solid #1d2330;">\n${currentCode}\n</div>`;
                 }
-
-                globalUpgradedCode = upgradedCode;
-
+                globalUpgradedCode = upgraded;
                 logTerminal(" ");
                 logTerminal("■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■ 100% EXÉCUTÉ PAR YSY GPT", "error-highlight");
                 logTerminal(" ");
-
-                const successDiv = document.createElement("div");
-                successDiv.className = "success-box";
-                successDiv.innerHTML = `
-                    <h3 style="font-weight:900; color:#10b981; margin-bottom:10px; letter-spacing:-0.5px;">RAPPORT GLOBAL DE PERFORMANCE</h3>
-                    <p style="color:#f7f8fb; font-size:16px; margin-bottom:15px;">📊 Taux de réussite estimé du projet : <strong style="color:#10b981; font-size:22px;">${pourcentage}%</strong></p>
-                    
-                    <h4 style="color:#fff; font-size:14px; font-weight:700;">Optimisations Full-Stack appliquées :</h4>
+                const box = document.createElement("div");
+                box.className = "success-box";
+                box.innerHTML = `
+                    <h3 style="font-weight:900;color:#0fd98a;margin-bottom:10px;letter-spacing:-.5px;">RAPPORT GLOBAL DE PERFORMANCE</h3>
+                    <p style="color:#eef0f6;font-size:16px;margin-bottom:15px;">📊 Taux de réussite estimé : <strong style="color:#0fd98a;font-size:22px;">${pct}%</strong></p>
+                    <h4 style="color:#fff;font-size:13px;font-weight:700;">Optimisations appliquées :</h4>
                     <ul>
-                        <li>${conseil1}</li>
-                        <li>${conseil2}</li>
-                        <li>${conseil3}</li>
+                        <li>Refonte HTML : Balisage sémantique premium optimisé pour le SEO et l'accessibilité.</li>
+                        <li>Style CSS3 : Thème noir cinématique, variables centralisées et transitions fluides.</li>
+                        <li>Script JavaScript : Validation asynchrone instantanée avec alertes dynamiques.</li>
                     </ul>
-                    
-                    <button onclick="applyIAFixes()" style="margin-top: 24px; background: #10b981; color: white; border: none; padding: 14px 24px; border-radius: 999px; font-weight: 900; cursor: pointer; font-size: 13px; width:100%; letter-spacing:1px; box-shadow:0 4px 14px rgba(16,185,129,0.4);">✓ INJECTER LE CODE FULL-STACK OPTIMISÉ</button>
-                `;
-                terminalConsole.appendChild(successDiv);
+                    <button onclick="applyIAFixes()" style="margin-top:22px;background:#0fd98a;color:#07080a;border:none;padding:13px 22px;border-radius:999px;font-weight:900;cursor:pointer;font-size:12px;width:100%;letter-spacing:1.5px;box-shadow:0 4px 14px rgba(15,217,138,.3);">✓ INJECTER LE CODE FULL-STACK OPTIMISÉ</button>`;
+                terminalConsole.appendChild(box);
                 terminalStage.scrollTop = terminalStage.scrollHeight;
             }, 1200);
         });
 
         function applyIAFixes() {
-            if(globalUpgradedCode) {
-                document.getElementById("codeEditor").value = globalUpgradedCode;
-                compileCode();
-            }
-            formOverlay.classList.remove("active"); 
-            body.classList.remove("modal-open");
-            
-            setTimeout(() => {
-                chatbotStage.style.display = "flex";
-                terminalStage.style.display = "none";
-                terminalConsole.innerHTML = "";
-            }, 500);
-
-            document.getElementById('launcher').scrollIntoView({behavior: 'smooth'});
+            if (globalUpgradedCode) { document.getElementById("codeEditor").value = globalUpgradedCode; compileCode(); }
+            formOverlay.classList.remove("active"); document.body.classList.remove("modal-open");
+            setTimeout(() => { chatbotStage.style.display = "flex"; terminalStage.style.display = "none"; terminalConsole.innerHTML = ""; }, 500);
+            document.getElementById('launcher').scrollIntoView({behavior:'smooth'});
         }
     </script>
 </body>
